@@ -59,21 +59,13 @@ function formatProblemDisplay(problem: vo.ProblemState): string {
     return `${tries}-${timeStr}`;
 }
 
-/** 判断是否应该显示一血标记（若一血产生于封榜后，需等该题所有 pending 揭完才显示） */
+/** 判断是否显示一血：firstSolvers 只有在应显示时才有值（vo.ts 已处理延迟逻辑） */
 function shouldShowFirstSolve(
     state: vo.ContestState,
     problemId: string,
     teamId: string
 ): boolean {
-    if (state.firstSolvers[problemId] !== teamId) return false;
-    const hasPending = state.teamStates.some((t) =>
-        t.problemStates.some(
-            (p) =>
-                p.info.id === problemId &&
-                p.state === vo.ProblemStateKind.Pending
-        )
-    );
-    return !hasPending;
+    return state.firstSolvers[problemId] === teamId;
 }
 
 /** 获取题目泡泡 CSS 类名 */

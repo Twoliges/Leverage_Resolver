@@ -126,6 +126,15 @@ export function calcContestState(data: dto.Contest): ContestState {
         }
     }
 
+    // 预计算封榜后的一血：按时间顺序扫描冻结提交，最早 AC 者即为真正一血
+    const pendingFirstSolvers: { [problemId: string]: string | undefined } = {};
+    for (const submission of data.submissions) {
+        if (submission.submitTime < data.freezeTime) continue;
+        if (!submission.accepted) continue;
+        if (firstSolvers[submission.problemId] !== undefined) continue; // 已有封榜前一血
+        if (pendingFirstSolvers[submission.problemId] !== undefined) continue; // 更早的已锁定
+        pendingFirstSolvers[submission.problemId] = submission.teamId;
+    }
 
     const teamStates = Array.from(teamMap.values());
 
@@ -133,7 +142,7 @@ export function calcContestState(data: dto.Contest): ContestState {
         info: data,
         teamStates,
         firstSolvers,
-        pendingFirstSolvers: {},
+        pendingFirstSolvers,
         cursor: {
             index: teamStates.length - 1,
             tick: 0,
@@ -244,12 +253,8 @@ export function* reveal(state: ContestState): Generator<HighlightItem | undefine
                 team.penalty += problem.passTime + state.info.penaltyTime * 60000 * problem.passIndex;
             }
             problem.state = (problem.highestScore > 0 ? ProblemStateKind.Passed : ProblemStateKind.Failed);
-            // 封榜后产生的首 A：先存入 pending，等该题全部揭完再晋升为正式一血
-            if (state.firstSolvers[problem.info.id] === undefined &&
-                state.pendingFirstSolvers[problem.info.id] === undefined &&
-                submission.accepted) {
-                state.pendingFirstSolvers[problem.info.id] = team.info.id;
-            }
+            // 封榜后一血已在 calcContestState 按时间顺序预计算并存入 pendingFirstSolvers
+            // 这里不再判断，只等全揭完时晋升
             if (problem.state === ProblemStateKind.Failed) {
                 problem.tryCount += problem.unrevealedSubmissions.length;
             }
@@ -258,11 +263,12 @@ export function* reveal(state: ContestState): Generator<HighlightItem | undefine
             problem.unrevealedSubmissions = [];
             problem.revealedSubmissions.push(...movedSubs);
 
-            // 若该题所有队伍的冻结提交都已揭完，晋升延迟的一血
+            // 若该题所有队伍的冻结提交都已揭完，晋升延迟的一血，并清理 pending 标记
             if (isProblemFullyRevealed(state, problem.info.id)) {
                 const pending = state.pendingFirstSolvers[problem.info.id];
                 if (pending !== undefined) {
                     state.firstSolvers[problem.info.id] = pending;
+                    delete state.pendingFirstSolvers[problem.info.id];
                 }
             }
 
