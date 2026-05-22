@@ -17,6 +17,7 @@ export interface ContestState {
     info: dto.Contest,
     teamStates: TeamState[],
     firstSolvers: { [problemId: string]: string | undefined; } // problemId -> teamId
+    pendingFirstSolvers: { [problemId: string]: string | undefined; } // 封榜后一血，等该题全部揭完再晋升
     cursor: {
         index: number,
         tick: number,
@@ -131,6 +132,7 @@ export function calcContestState(data: dto.Contest): ContestState {
         info: data,
         teamStates,
         firstSolvers,
+        pendingFirstSolvers: {},
         cursor: {
             index: teamStates.length - 1,
             tick: 0,
@@ -195,6 +197,17 @@ export type HighlightItem = {
 
 export type RevealGen = Generator<HighlightItem | undefined, void, void>;
 
+/** 检查一道题是否所有队伍的冻结提交都已揭完 */
+function isProblemFullyRevealed(state: ContestState, problemId: string): boolean {
+    for (const team of state.teamStates) {
+        const p = team.problemStates.find(ps => ps.info.id === problemId);
+        if (p && p.state === ProblemStateKind.Pending) {
+            return false;
+        }
+    }
+    return true;
+}
+
 export function* reveal(state: ContestState): Generator<HighlightItem | undefined, void, void> {
     const rule = state.info.rule ?? "icpc";
 
@@ -230,14 +243,27 @@ export function* reveal(state: ContestState): Generator<HighlightItem | undefine
                 team.penalty += problem.passTime + state.info.penaltyTime * 60000 * problem.passIndex;
             }
             problem.state = (problem.highestScore > 0 ? ProblemStateKind.Passed : ProblemStateKind.Failed);
-            if (state.firstSolvers[problem.info.id] === undefined && submission.accepted) {
-                state.firstSolvers[problem.info.id] = team.info.id;
+            // 封榜后产生的首 A：先存入 pending，等该题全部揭完再晋升为正式一血
+            if (state.firstSolvers[problem.info.id] === undefined &&
+                state.pendingFirstSolvers[problem.info.id] === undefined &&
+                submission.accepted) {
+                state.pendingFirstSolvers[problem.info.id] = team.info.id;
             }
             if (problem.state === ProblemStateKind.Failed) {
                 problem.tryCount += problem.unrevealedSubmissions.length;
             }
+            // 修复：先将 unrevealed 备份，再清空并移入 revealed，防止数据丢失
+            const movedSubs = [...problem.unrevealedSubmissions];
             problem.unrevealedSubmissions = [];
-            problem.revealedSubmissions.push(...problem.unrevealedSubmissions);
+            problem.revealedSubmissions.push(...movedSubs);
+
+            // 若该题所有队伍的冻结提交都已揭完，晋升延迟的一血
+            if (isProblemFullyRevealed(state, problem.info.id)) {
+                const pending = state.pendingFirstSolvers[problem.info.id];
+                if (pending !== undefined) {
+                    state.firstSolvers[problem.info.id] = pending;
+                }
+            }
 
             state.cursor.tick += 1;
             yield;

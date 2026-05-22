@@ -12,20 +12,68 @@ import { WomanOutlined } from "@ant-design/icons";
 
 // ───── 工具函数 ─────
 
-/** 获取题目泡泡内部显示文字 */
-function getBubbleContent(problem: vo.ProblemState): string {
+/** 从 ProblemState 中提取展示用信息：提交次数 + 最后一次提交时间 */
+function getProblemDisplayInfo(
+    problem: vo.ProblemState
+): { tries: number; lastTime: number | null } {
     switch (problem.state) {
         case vo.ProblemStateKind.Passed:
-            return problem.info.score !== undefined
-                ? String(problem.highestScore)
-                : "\u2713"; // ✓
-        case vo.ProblemStateKind.Failed:
-            return String(problem.tryCount);
-        case vo.ProblemStateKind.Pending:
-            return "?";
+            // AC：显示「直到首次 AC 之前的提交次数」和「首次 AC 时间」
+            return {
+                tries: (problem.passIndex ?? 0) + 1,
+                lastTime: problem.passTime,
+            };
+        case vo.ProblemStateKind.Pending: {
+            // Pending：显示总提交次数 + 最后一次提交时间
+            const allSubs = [
+                ...problem.revealedSubmissions,
+                ...problem.unrevealedSubmissions,
+            ];
+            if (allSubs.length === 0) return { tries: 0, lastTime: null };
+            const last = allSubs.reduce((a, b) =>
+                a[1].submitTime > b[1].submitTime ? a : b
+            );
+            return { tries: allSubs.length, lastTime: last[1].submitTime };
+        }
+        case vo.ProblemStateKind.Failed: {
+            // WA：显示总提交次数 + 最后一次提交时间
+            if (problem.revealedSubmissions.length === 0) {
+                return { tries: problem.tryCount, lastTime: null };
+            }
+            const last = problem.revealedSubmissions.reduce((a, b) =>
+                a[1].submitTime > b[1].submitTime ? a : b
+            );
+            return { tries: problem.tryCount, lastTime: last[1].submitTime };
+        }
         default:
-            return "";
+            return { tries: 0, lastTime: null };
     }
+}
+
+/** 格式化为「提交次数-时间(分钟)」的展示字符串 */
+function formatProblemDisplay(problem: vo.ProblemState): string {
+    if (problem.state === vo.ProblemStateKind.Untouched) return "";
+    const { tries, lastTime } = getProblemDisplayInfo(problem);
+    const timeStr =
+        lastTime != null ? String(Math.round(lastTime / 60000)) : "?";
+    return `${tries}-${timeStr}`;
+}
+
+/** 判断是否应该显示一血标记（若一血产生于封榜后，需等该题所有 pending 揭完才显示） */
+function shouldShowFirstSolve(
+    state: vo.ContestState,
+    problemId: string,
+    teamId: string
+): boolean {
+    if (state.firstSolvers[problemId] !== teamId) return false;
+    const hasPending = state.teamStates.some((t) =>
+        t.problemStates.some(
+            (p) =>
+                p.info.id === problemId &&
+                p.state === vo.ProblemStateKind.Pending
+        )
+    );
+    return !hasPending;
 }
 
 /** 获取题目泡泡 CSS 类名 */
@@ -256,23 +304,6 @@ const Board: React.FC<BoardProps> = ({ data, options }: BoardProps) => {
         setFocusIndex(state.cursor.index);
     }, [state.cursor]);
 
-    // ───── 进度统计 ─────
-    const revealedCount = state.teamStates.reduce(
-        (acc, t) =>
-            acc +
-            t.problemStates.reduce(
-                (a, p) =>
-                    a +
-                    p.revealedSubmissions.length +
-                    (p.state === vo.ProblemStateKind.Passed ||
-                    p.state === vo.ProblemStateKind.Failed
-                        ? p.unrevealedSubmissions.length
-                        : 0),
-                0
-            ),
-        0
-    );
-
     // ───── 渲染 ─────
     return (
         <div className="resolver-container">
@@ -383,8 +414,11 @@ const Board: React.FC<BoardProps> = ({ data, options }: BoardProps) => {
                                         highlightItem.problemId === p.info.id;
 
                                     const isFirstSolver =
-                                        state.firstSolvers[p.info.id] ===
-                                            team.info.id &&
+                                        shouldShowFirstSolve(
+                                            state,
+                                            p.info.id,
+                                            team.info.id
+                                        ) &&
                                         p.state ===
                                             vo.ProblemStateKind.Passed;
 
@@ -409,7 +443,7 @@ const Board: React.FC<BoardProps> = ({ data, options }: BoardProps) => {
                                                 `${firstSolveClass}${highlightClass}${shiningClass}`
                                             }
                                         >
-                                            {getBubbleContent(p)}
+                                            {formatProblemDisplay(p)}
                                         </div>
                                     );
                                 })}
