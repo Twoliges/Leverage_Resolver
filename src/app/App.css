@@ -1,11 +1,10 @@
 html {
     scrollbar-width: none;
-    background: #0c1017;
 }
 
 body {
     margin: 0;
-    background: #0c1017;
+    background: #0c1017; /* 默认暗色，亮色由 Board 自身容器覆盖 */
 }
 
 ::-webkit-scrollbar {

@@ -316,3 +316,76 @@
 .info-message {
     margin-top: 80vh;
 }
+
+/* ================================================================
+   亮色模式（白天模式）覆盖
+   默认（无 .light-mode）即为暗色模式
+   将 Loader 中 "黑暗模式" 开关关闭即可启用
+   ================================================================ */
+.resolver-container.light-mode {
+    background: #ffffff;
+    color: #24292f;
+}
+
+/* ── 标题栏 ── */
+.resolver-container.light-mode .resolver-header {
+    background: #f6f8fa;
+    border-bottom-color: #d0d7de;
+}
+.resolver-container.light-mode .resolver-title {
+    color: #24292f;
+}
+.resolver-container.light-mode .resolver-progress {
+    color: #656d76;
+}
+
+/* ── 题目编号行 ── */
+.resolver-container.light-mode .problem-labels-row {
+    background: #ffffff;
+    border-bottom-color: #d0d7de;
+}
+.resolver-container.light-mode .problem-label {
+    color: #656d76;
+}
+
+/* ── 队伍卡片 ── */
+.resolver-container.light-mode .team-card {
+    background: #ffffff;
+    border-bottom-color: #d0d7de;
+}
+.resolver-container.light-mode .team-card:hover {
+    background: #f6f8fa;
+}
+.resolver-container.light-mode .team-card.focused {
+    background: #ddf4ff;
+    box-shadow: inset 0 0 0 1px rgba(9, 105, 218, 0.25);
+}
+
+/* ── 文字颜色 ── */
+.resolver-container.light-mode .team-rank,
+.resolver-container.light-mode .team-name,
+.resolver-container.light-mode .solved-count {
+    color: #24292f;
+}
+.resolver-container.light-mode .team-org,
+.resolver-container.light-mode .penalty-time {
+    color: #656d76;
+}
+.resolver-container.light-mode .team-certified {
+    color: #8b949e;
+}
+
+/* ── 未触碰泡泡 ── */
+.resolver-container.light-mode .problem-bubble.state-untouched {
+    border-color: #d0d7de;
+}
+
+/* ── 奖牌色条在亮色模式下保持原色 ── */
+
+/* ── 全局背景 ── */
+.resolver-container.light-mode .board-body {
+    background: #ffffff;
+}
+.resolver-container.light-mode .board-spacer {
+    background: #ffffff;
+}

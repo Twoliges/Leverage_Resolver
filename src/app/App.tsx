@@ -33,7 +33,7 @@ const App: React.FC = () => {
                 </Row>
             ) : null}
             {(data !== null && running) ? (
-                <div style={{ width: "100%", background: "#0c1017" }}>
+                <div style={{ width: "100%" }}>
                     {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
                     <Board data={data} options={options!} />
                 </div>

@@ -298,7 +298,7 @@ const Board: React.FC<BoardProps> = ({ data, options }: BoardProps) => {
 
     // ───── 渲染 ─────
     return (
-        <div className="resolver-container">
+        <div className={`resolver-container${options.darkMode ? "" : " light-mode"}`}>
             {/* ===== 顶部标题栏 ===== */}
             <div className="resolver-header">
                 <span className="resolver-title">
