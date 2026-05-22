@@ -1,0 +1,33 @@
+.team {
+    width: 100%;
+    box-shadow: none;
+    transform-style: preserve-3d;
+}
+
+.focused-team {
+    width: 100%;
+    position: relative;
+    z-index: 512;
+    transition: box-shadow 0.2s ease-out;
+    transform-style: preserve-3d;
+}
+
+.info-message {
+    margin-top: 80vh;
+}
+
+.board-head {
+    width: 100%;
+    font-size: 2em;
+    text-align: center;
+    z-index: 1024;
+    box-shadow: "0 5px 8px 4px rgba(0, 0, 0, 0.09)"
+}
+
+.board-body {
+    width: 100%;
+    overflow-anchor: none;
+    font-size: 2em;
+    text-align: center;
+    transform-style: preserve-3d;
+}
