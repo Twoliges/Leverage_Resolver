@@ -252,11 +252,12 @@ export function* reveal(state: ContestState): Generator<HighlightItem | undefine
             yield;
 
         } else {
-            if (state.cursor.index !== state.teamStates.length - 1) {
+            state.cursor.index -= 1;
+            if (state.cursor.index >= 0) {
+                state.cursor.focus = state.cursor.index;
                 state.cursor.tick += 1;
                 yield;
             }
-            state.cursor.index -= 1;
         }
     }
     state.cursor.focus = -1;
