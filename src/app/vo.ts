@@ -6,6 +6,7 @@ export interface BoardOptions {
     speedFactor: number;
     showMedal: boolean;
     darkMode: boolean;
+    showUserName: boolean;
 }
 
 export const MIN_SPEED_FACTOR = 0.1;

@@ -196,7 +196,7 @@
 }
 
 .solved-count {
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 700;
     color: #e6edf3;
     font-variant-numeric: tabular-nums;
@@ -204,7 +204,7 @@
 }
 
 .penalty-time {
-    font-size: 16px;
+    font-size: 20px;
     color: #b0b8c4;
     font-variant-numeric: tabular-nums;
     line-height: 1;

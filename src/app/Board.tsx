@@ -382,12 +382,12 @@ const Board: React.FC<BoardProps> = ({ data, options }: BoardProps) => {
                                         <WomanOutlined className="gender-icon" />
                                     )}
                                 </div>
-                                {team.info.userName && (
+                                {options.showUserName && team.info.userName && (
                                     <div className="team-org">
                                         {team.info.userName}
                                     </div>
                                 )}
-                                {team.info.certifiedName &&
+                                {options.showUserName && team.info.certifiedName &&
                                     team.info.certifiedName !==
                                         team.info.name && (
                                         <div className="team-certified">

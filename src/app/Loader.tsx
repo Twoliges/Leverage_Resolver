@@ -66,7 +66,8 @@ const Loader: React.FC<LoaderProps> = ({ onLoad, onStart }: LoaderProps) => {
         const speedFactor = parseFloat(form.getFieldValue("speedFactor"));
         const showMedal = (data?.medal !== undefined) && (!!form.getFieldValue("showMedal"));
         const darkMode = !!form.getFieldValue("darkMode");
-        onStart({ autoReveal, shiningBeforeReveal, speedFactor, showMedal, darkMode });
+        const showUserName = !!form.getFieldValue("showUserName");
+        onStart({ autoReveal, shiningBeforeReveal, speedFactor, showMedal, darkMode, showUserName });
     }, [onStart, form, data]);
 
     return (
@@ -172,7 +173,7 @@ const Loader: React.FC<LoaderProps> = ({ onLoad, onStart }: LoaderProps) => {
                     </Row>
                     <Row>
                         <Form form={form} style={{ width: "100%" }} layout="inline"
-                            initialValues={{ autoReveal: false, shiningBeforeReveal: true, speedFactor: 2, showMedal: true }}
+                            initialValues={{ autoReveal: false, shiningBeforeReveal: true, speedFactor: 2, showMedal: true, showUserName: true }}
                         >
                             <Form.Item name="autoReveal" label="自动运行" valuePropName="checked">
                                 <Switch />
@@ -184,6 +185,9 @@ const Loader: React.FC<LoaderProps> = ({ onLoad, onStart }: LoaderProps) => {
                                 <InputNumber min={vo.MIN_SPEED_FACTOR} max={vo.MAX_SPEED_FACTOR} step={0.1} />
                             </Form.Item>
                             <Form.Item name="darkMode" label="黑暗模式" valuePropName="checked">
+                                <Switch />
+                            </Form.Item>
+                            <Form.Item name="showUserName" label="显示来源/用户名" valuePropName="checked">
                                 <Switch />
                             </Form.Item>
                             {/* {data.medal === undefined ? null : (
