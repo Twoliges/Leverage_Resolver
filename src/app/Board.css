@@ -1,33 +1,288 @@
-.team {
+/* =============================================
+   Board.css — XCPC-Tools Resolver 风格暗黑主题
+   ============================================= */
+
+/* ---------- 全局容器 ---------- */
+.resolver-container {
     width: 100%;
-    box-shadow: none;
-    transform-style: preserve-3d;
+    min-height: 100vh;
+    background: #0c1017;
+    color: #c9d1d9;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        'Helvetica Neue', Arial, sans-serif;
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
-.focused-team {
-    width: 100%;
-    position: relative;
-    z-index: 512;
-    transition: box-shadow 0.2s ease-out;
-    transform-style: preserve-3d;
-}
-
-.info-message {
-    margin-top: 80vh;
-}
-
-.board-head {
-    width: 100%;
-    font-size: 2em;
-    text-align: center;
+/* ---------- 顶部标题栏 ---------- */
+.resolver-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0 24px;
+    background: #151b23;
+    border-bottom: 1px solid #1c2333;
+    position: sticky;
+    top: 0;
     z-index: 1024;
-    box-shadow: "0 5px 8px 4px rgba(0, 0, 0, 0.09)"
+    gap: 20px;
 }
 
+.resolver-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #e6edf3;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.resolver-progress {
+    font-size: 11px;
+    color: #6e7681;
+    font-weight: 500;
+}
+
+.lock-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    position: absolute;
+    right: 24px;
+    transition: background 0.3s ease;
+}
+
+/* ---------- 题目编号行 ---------- */
+.problem-labels {
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px 20px 4px 0;
+    background: #0c1017;
+    border-bottom: 1px solid #1c2333;
+    position: sticky;
+    top: 44px;
+    z-index: 512;
+}
+
+.problem-label {
+    width: 36px;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #484f58;
+    margin: 0 2px;
+}
+
+/* ---------- 队伍卡片 ---------- */
+.team-card {
+    display: flex;
+    align-items: center;
+    padding: 10px 18px;
+    background: #0d1117;
+    border-bottom: 1px solid #161b22;
+    transition: background 0.25s ease, box-shadow 0.25s ease;
+    min-height: 58px;
+}
+
+.team-card.focused {
+    background: #161b22;
+    box-shadow: inset 0 0 0 1px rgba(110, 64, 201, 0.25);
+}
+
+.team-card:hover {
+    background: #12161c;
+}
+
+/* 奖牌色条 */
+.medal-stripe {
+    width: 4px;
+    min-height: 40px;
+    border-radius: 2px;
+    margin-right: 14px;
+    flex-shrink: 0;
+    align-self: stretch;
+}
+
+/* 名次 */
+.team-rank {
+    width: 44px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #e6edf3;
+    text-align: center;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+/* 队伍名称区域 */
+.team-name-section {
+    flex: 1;
+    min-width: 0;
+    padding: 0 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1px;
+}
+
+.team-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #e6edf3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.35;
+}
+
+.team-org {
+    font-size: 11px;
+    color: #8b949e;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.team-certified {
+    font-size: 11px;
+    color: #6e7681;
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gender-icon {
+    color: #f778ba;
+    margin-left: 5px;
+    font-size: 14px;
+}
+
+/* 得分区域 */
+.team-score-section {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-right: 18px;
+    min-width: 76px;
+    justify-content: flex-end;
+}
+
+.solved-count {
+    font-size: 20px;
+    font-weight: 700;
+    color: #e6edf3;
+    font-variant-numeric: tabular-nums;
+}
+
+.penalty-time {
+    font-size: 13px;
+    color: #8b949e;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 题目泡泡容器 ---------- */
+.problem-bubbles {
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+/* 题目泡泡 */
+.problem-bubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+    position: relative;
+    transition: background 0.35s ease, border-color 0.35s ease,
+        box-shadow 0.35s ease, transform 0.25s ease;
+}
+
+/* 状态配色 */
+.problem-bubble.state-untouched {
+    border: 2px solid #21262d;
+    background: transparent;
+}
+
+.problem-bubble.state-passed {
+    background: #1a7f37;
+    border: 2px solid #1a7f37;
+}
+
+.problem-bubble.state-failed {
+    background: #cf222e;
+    border: 2px solid #cf222e;
+}
+
+.problem-bubble.state-pending {
+    background: #6e40c9;
+    border: 2px solid #6e40c9;
+}
+
+/* 首杀标记 */
+.problem-bubble.first-solve {
+    border-color: #d4a72c !important;
+    box-shadow: 0 0 8px rgba(212, 167, 44, 0.55);
+}
+
+/* 揭榜高亮闪烁 */
+.problem-bubble.highlight-glow {
+    animation: bubbleGlow 0.45s ease-in-out;
+}
+
+@keyframes bubbleGlow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(110, 64, 201, 0.85);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 22px 7px rgba(110, 64, 201, 0.85);
+        transform: scale(1.4);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(110, 64, 201, 0);
+        transform: scale(1);
+    }
+}
+
+/* 揭榜前闪烁 */
+.problem-bubble.shining {
+    animation: shiningPulse 0.45s ease-in-out infinite alternate;
+}
+
+@keyframes shiningPulse {
+    0% {
+        opacity: 0.45;
+        transform: scale(0.92);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+}
+
+/* ---------- FlipMove 容器 ---------- */
 .board-body {
     width: 100%;
     overflow-anchor: none;
-    font-size: 2em;
-    text-align: center;
-    transform-style: preserve-3d;
+}
+
+/* 底部留白 */
+.board-spacer {
+    min-height: 55vh;
+}
+
+/* 提示消息位置 */
+.info-message {
+    margin-top: 80vh;
 }

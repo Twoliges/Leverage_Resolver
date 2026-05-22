@@ -1,8 +1,14 @@
-html{
+html {
     scrollbar-width: none;
+    background: #0c1017;
 }
 
-::-webkit-scrollbar{
+body {
+    margin: 0;
+    background: #0c1017;
+}
+
+::-webkit-scrollbar {
     display: none;
 }
 
