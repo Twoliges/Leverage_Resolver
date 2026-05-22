@@ -325,17 +325,19 @@ const Board: React.FC<BoardProps> = ({ data, options }: BoardProps) => {
                 />
             </div>
 
-            {/* ===== 题目编号行 ===== */}
-            <div className="problem-labels">
-                {data.problems.map((p) => (
-                    <div
-                        key={p.id}
-                        className="problem-label"
-                        style={{ color: p.color || "#484f58" }}
-                    >
-                        {p.tag}
-                    </div>
-                ))}
+            {/* ===== 题目编号行（Grid 列自动对齐气泡） ===== */}
+            <div className="problem-labels-row">
+                <div className="problem-labels">
+                    {data.problems.map((p) => (
+                        <div
+                            key={p.id}
+                            className="problem-label"
+                            style={{ color: p.color || "#8b949e" }}
+                        >
+                            {p.tag}
+                        </div>
+                    ))}
+                </div>
             </div>
 
             {/* ===== 队伍卡片列表 ===== */}
@@ -372,8 +374,8 @@ const Board: React.FC<BoardProps> = ({ data, options }: BoardProps) => {
                                     : team.rank}
                             </div>
 
-                            {/* 队伍名称 */}
-                            <div className="team-name-section">
+                            {/* 队伍名称 —— 两行/三行，永不截断 */}
+                            <div className="team-info">
                                 <div className="team-name">
                                     {team.info.name}
                                     {team.info.gender === "female" && (
