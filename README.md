@@ -2,7 +2,7 @@
 
 ## 项目介绍
 
-Leverage_Resolver 是基于 ScrollBoard 项目的滚榜动画解析器，用于展示从 Leverage 导出的比赛信息。
+Leverage_Resolver 是基于 ScrollBoard 项目(https://github.com/ThinkSpiritLab/ScrollBoard)的滚榜动画解析器，用于展示从 Leverage 导出的比赛信息。
 Leverage_Resolver 相较于原版优化了一血逻辑，增加了隐藏用户名功能，同时改进了UI使得其更贴近 ICPC Tools - Resolver。
 虽然这一点未经证实，但 Leverage_Resolver 应该不兼容其他任何OJ的导出数据。
 
@@ -29,7 +29,7 @@ Demo : 待施工
 ## 开发
 
 ```shell 
-git clone https://github.com/ThinkSpiritLab/ScrollBoard.git
+git clone https://github.com/Twoliges/Leverage_Resolver.git
 pnpm install 
 pnpm start
 ```
