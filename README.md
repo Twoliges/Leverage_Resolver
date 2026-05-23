@@ -15,6 +15,10 @@ Demo : 待施工
 加载数据有两种方式：
 
 + 通过 “加载数据” 按钮选择 json 文件。
+
+    对于Leverage用户，你可以在有管理员权限的情况下
+    将竞赛链接的后缀改为 v1/contest/{contest-id}/export-scroll-board
+    以获取该场比赛的json文件
 + 在 URL 参数中加上数据文件 URL，例如 
     
     ?data-url=https://thinkspiritlab.github.io/ScrollBoard/data/test.json
